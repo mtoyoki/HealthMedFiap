@@ -4,6 +4,8 @@ Add-Migration Versao01 -StartupProject Infra.Data
 
 Update-Database -StartupProject Infra.Data -Connection "Server=localhost\sqlexpress;Database=DB_HEALTHMED;Trusted_Connection=True;TrustServerCertificate=True"
 
+Add-Migration Versao02 -StartupProject Infra.Data
+
 ----------------------------------------------------------------------------------------------
 
 Update-Database -StartupProject Infrastructure -Connection "Server=localhost\sqlexpress;Database=DB_CONTATO;Trusted_Connection=True;TrustServerCertificate=True" -TargetMigration "Versao03"

@@ -27,7 +27,6 @@ namespace Infra.Data.Configurations
             builder.Property(m => m.Email)
                 .HasColumnType("VARCHAR(50)");
 
-
             builder.Property(m => m.Senha)
                 .HasColumnType("VARCHAR(20)");
 
@@ -43,14 +42,8 @@ namespace Infra.Data.Configurations
                 .WithMany()
                 .HasForeignKey(c => c.EspecialidadeId);
 
-
-            //builder.HasMany(m => m.HorariosDisponiveis)
-            //    .WithOne()
-            //    .HasForeignKey(h => h.MedicoId);
-
-            //builder.HasMany(m => m.Consultas)
-            //    .WithOne(c => c.Medico)
-            //    .HasForeignKey(c => c.MedicoId);
+            // Adicionando índice na coluna CRM
+            builder.HasIndex(m=> m.Crm).HasDatabaseName("IX_MEDICO_Crm");
         }
     }
 }

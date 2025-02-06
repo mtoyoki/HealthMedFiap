@@ -9,7 +9,7 @@ namespace Domain.Entities
 
         public DateTime DataHora { get; set; }
 
-        public float Valor { get; set; }
+        public decimal Valor { get; set; }
 
         public bool Disponivel { get; set; } = true;
 

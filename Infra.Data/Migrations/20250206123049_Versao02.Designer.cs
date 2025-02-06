@@ -4,6 +4,7 @@ using Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250206123049_Versao02")]
+    partial class Versao02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,8 +42,8 @@ namespace Infra.Data.Migrations
                     b.Property<int>("MedicoId")
                         .HasColumnType("INT");
 
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("DECIMAL(18,2)");
+                    b.Property<double>("Valor")
+                        .HasColumnType("FLOAT");
 
                     b.HasKey("Id");
 
@@ -61,6 +64,7 @@ namespace Infra.Data.Migrations
                         .HasColumnType("INT");
 
                     b.Property<string>("JustificativaSituacao")
+                        .IsRequired()
                         .HasColumnType("VARCHAR(500)");
 
                     b.Property<int>("PacienteId")

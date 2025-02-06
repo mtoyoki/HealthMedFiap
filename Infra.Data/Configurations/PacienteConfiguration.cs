@@ -27,17 +27,8 @@ namespace Infra.Data.Configurations
             builder.Property(p => p.Email)
                    .HasColumnType("VARCHAR(50)");
 
-
             builder.Property(p => p.Senha)
                 .HasColumnType("VARCHAR(20)");
-
-            //builder.Property(p => p.RegiaoId)
-            //       .HasColumnType("INT")
-            //       .IsRequired();
-
-            //builder.HasOne(c => c.Regiao)
-            //       .WithMany()         
-            //       .HasForeignKey(c => c.RegiaoId);
         }
     }
 }

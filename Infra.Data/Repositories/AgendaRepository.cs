@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Domain.Queries.Paciente;
+﻿using Domain.Dtos;
+using Domain.Entities;
 using Domain.Repositories;
 using Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -8,17 +8,25 @@ namespace Infra.Data.Repositories
 {
     public class AgendaRepository(ApplicationDbContext context) : RepositoryBase<Agenda>(context), IAgendaRepository
     {
-        public async Task<IEnumerable<PesquisarAgendaQueryResult>> GetByCrm(string crm)
+        public async Task<IEnumerable<PesquisarAgendaDto>> GetByCrm(string crm)
         {
             return await _context.Agenda
-                    .Where(a => a.Medico.Crm == crm)
-                    .Include(a => a.Medico.Especialidade)
-                    .AsNoTracking()
-                    .Select(a => AgendaQueryResult(a))
-                    .ToListAsync();
+                                    .Where(a => a.Medico.Crm == crm)
+                                    .Include(a => a.Medico.Especialidade)
+                                    .AsNoTracking()
+                                    .Select(a => NovoPesquisarAgendaDto(a))
+                                    .ToListAsync();
         }
 
-        private static PesquisarAgendaQueryResult AgendaQueryResult(Agenda agenda) => new PesquisarAgendaQueryResult(
+        public async Task<Agenda?> GetByCrmAndDataHora(string crm, DateTime dataHora)
+        {
+            return await _context.Agenda
+                                 .Where(a => a.Medico.Crm == crm && a.DataHora == dataHora)
+                                 .AsNoTracking()
+                                 .FirstOrDefaultAsync();
+        }
+
+        private static PesquisarAgendaDto NovoPesquisarAgendaDto(Agenda agenda) => new PesquisarAgendaDto(
             agenda.Id,
             agenda.Medico.Crm,
             agenda.Medico.Nome,

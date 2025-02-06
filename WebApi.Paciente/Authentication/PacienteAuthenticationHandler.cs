@@ -1,19 +1,20 @@
-﻿
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using Application.Commands.Paciente;
+using Core.Commands;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Options;
 
-namespace WebApi.Authentication
+namespace WebApi.Paciente.Authentication
 {
-    public class BasicAuthenticationHandler(
+    public class PacienteAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock,
-        IAuthenticationService authenticationService)
+        ICommandHandler<AutenticarPacienteCommand> autenticarPacienteCommandHandler)
         : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder, clock)
     {
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -29,26 +30,16 @@ namespace WebApi.Authentication
                 var username = credentials[0];
                 var password = credentials[1];
 
-                bool isAuthenticated = false;
-                bool isMedico = false;
+                var command = new AutenticarPacienteCommand(username, password);
+                var result = autenticarPacienteCommandHandler.Handle(command);
 
-                // Verifique se a solicitação é para o MedicoController ou PacienteController
-                if (Request.Path.StartsWithSegments("/api/medico"))
+                if (result.Success)
                 {
-                    isAuthenticated = authenticationService.AuthenticateMedicoAsync(username, password);
-                    isMedico = true;
-                }
-                else if (Request.Path.StartsWithSegments("/api/paciente"))
-                {
-                    isAuthenticated = authenticationService.AuthenticatePacienteAsync(username, password);
-                }
-
-                if (isAuthenticated)
-                {
-                    var claims = new[] {
-                    new Claim(ClaimTypes.NameIdentifier, username),
-                    new Claim(ClaimTypes.Role, isMedico? "Medico":"Paciente")
-                };
+                    var claims = new[] 
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, username),
+                        new Claim(ClaimTypes.Role, "Paciente")
+                    };
                     var identity = new ClaimsIdentity(claims, Scheme.Name);
                     var principal = new ClaimsPrincipal(identity);
                     var ticket = new AuthenticationTicket(principal, Scheme.Name);
