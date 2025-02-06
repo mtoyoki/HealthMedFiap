@@ -1,4 +1,6 @@
-﻿using Core.Commands;
+﻿using System.Net.Mail;
+using Core.Commands;
+using Domain.Entities;
 using Domain.Repositories;
 
 namespace Application.Commands.Medico.Handlers
@@ -8,7 +10,7 @@ namespace Application.Commands.Medico.Handlers
         public CommandResult Handle(AutenticarMedicoCommand command)
         {
             var medico = medicoRepository.GetMedicoByCrmAsync(command.Crm).Result;
-            if (medico != null && medico.Senha == command.Senha)
+            if (medico != null && medico.VerificarSenha(command.Senha))
             {
                 return CommandResultFactory.CreateSuccessResult("[SUCESSO] Médico autenticado");
             }

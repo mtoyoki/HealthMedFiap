@@ -1,6 +1,4 @@
-﻿using Core.Entities;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Medico : Usuario
     {
@@ -8,9 +6,6 @@ namespace Domain.Entities
         
         public int EspecialidadeId { get; set; }
         public virtual Especialidade Especialidade { get; set; }
-
-        //public List<HorarioDisponivel> HorariosDisponiveis { get; set; } = new List<HorarioDisponivel>();
-        //public List<Consulta> Consultas { get; set; } = new List<Consulta>();
 
         public Medico()
         {

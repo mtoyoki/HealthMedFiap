@@ -28,7 +28,7 @@ namespace Infra.Data.Configurations
                    .HasColumnType("VARCHAR(50)");
 
             builder.Property(p => p.Senha)
-                .HasColumnType("VARCHAR(20)");
+                .HasColumnType("VARCHAR(100)");
         }
     }
 }
