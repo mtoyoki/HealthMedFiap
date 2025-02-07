@@ -2,6 +2,7 @@
 using Application.Commands.Medico.Handlers;
 using Application.Commands.Paciente;
 using Application.Commands.Paciente.Handlers;
+using Application.Queries.Medico.Handlers;
 using Application.Queries.Paciente.Handlers;
 using Core.Commands;
 using Domain.Repositories;
@@ -24,7 +25,7 @@ namespace WebApi.Shared.Ioc
             //Repositories
             services.AddScoped<IMedicoRepository, MedicoRepository>();
             services.AddScoped<IPacienteRepository, PacienteRepository>();
-            services.AddScoped<IConsultaMedicaRepository, ConsultaRepository>();
+            services.AddScoped<IConsultaMedicaRepository, ConsultaMedicaRepository>();
             services.AddScoped<IAgendaRepository, AgendaRepository>();
             services.AddScoped<IEspecialidadeRepository, EspecialidadeRepository>();
 
@@ -40,6 +41,8 @@ namespace WebApi.Shared.Ioc
             services.AddScoped<ICommandHandler<CancelarConsultaCommand>, CancelarConsultaCommandHandler>();
 
             //Query Handlers
+            //#Medico
+            services.AddScoped<IPesquisarConsultaMedicaQueryHandler, PesquisarConsultaMedicaQueryHandler>();
             //#Paciente
             services.AddScoped<IBuscarMedicoQueryHandler, BuscarMedicoQueryHandler>();
             services.AddScoped<IPesquisarAgendaQueryHandler, PesquisarAgendaQueryHandler>();

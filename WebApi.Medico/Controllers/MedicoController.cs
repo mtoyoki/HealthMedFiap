@@ -1,8 +1,10 @@
-﻿using System.Security.Claims;
-using Application.Commands.Medico;
+﻿using Application.Commands.Medico;
+using Application.Queries.Medico;
+using Application.Queries.Medico.Handlers;
 using Core.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace WebApi.Medico.Controllers
 {
@@ -13,7 +15,8 @@ namespace WebApi.Medico.Controllers
     public class MedicoController(
         ICommandHandler<CadastrarAgendaCommand> cadastrarAgendaCommandHandler,
         ICommandHandler<AceitarConsultaCommand> aceitarConsultaCommandHandler,
-        ICommandHandler<RecusarConsultaCommand> recusarConsultaCommandHandler) : ControllerBase
+        ICommandHandler<RecusarConsultaCommand> recusarConsultaCommandHandler,
+        IPesquisarConsultaMedicaQueryHandler pesquisarConsultaMedicaQueryHandler) : ControllerBase
     {
         protected string? UserId => User.Claims
             .Where(c => c.Type == ClaimTypes.NameIdentifier)
@@ -31,6 +34,16 @@ namespace WebApi.Medico.Controllers
             if (result.Success) return Ok(result.Message);
 
             return BadRequest(result.Errors);
+        }
+
+        [HttpGet("consulta-medica/pesquisar")]
+        public IActionResult PesquisarConsultaMedica([FromQuery] PesquisarConsultaMedicaQuery command)
+        {
+            if (command.Crm != UserId) return Unauthorized("[ERRO] CRM informado é diferente do CRM do usuário logado.");
+
+            var result = pesquisarConsultaMedicaQueryHandler.GetByCrmAndSituacaoConsultaMedica(command).Result;
+
+            return Ok(result);
         }
 
         [HttpPost("consulta-medica/aceitar")]
@@ -57,7 +70,7 @@ namespace WebApi.Medico.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpGet("perfil")]
+        [HttpGet("roles")]
         public IActionResult GetUserRoles()
         {
             var roles = User.Claims

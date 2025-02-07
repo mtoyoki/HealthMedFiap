@@ -73,7 +73,7 @@ namespace WebApi.Paciente.Controllers
         }
 
 
-        [HttpGet("perfil")]
+        [HttpGet("roles")]
         public IActionResult GetUserRoles()
         {
             var roles = User.Claims
