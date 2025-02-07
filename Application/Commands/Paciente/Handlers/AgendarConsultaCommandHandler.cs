@@ -10,7 +10,7 @@ namespace Application.Commands.Paciente.Handlers
 
         public CommandResult Handle(AgendarConsultaCommand command)
         {
-            var paciente = pacienteRepository.GetPacienteByEmailOrCpf(command.Cpf).Result;
+            var paciente = pacienteRepository.GetPacienteByEmailOrCpf(command.EmailOrCpf).Result;
             if (paciente == null)
             {
                 return CommandResultFactory.CreateErrorResult(new List<string>() { "[ERRO] Não foi possível encontrar paciente." });

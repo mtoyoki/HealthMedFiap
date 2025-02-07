@@ -2,7 +2,7 @@
 {
     public class AgendarConsultaCommand
     {
-        public string Cpf { get; set; }
+        public string EmailOrCpf { get; set; }
 
         public int AgendaId { get; set; }
     }

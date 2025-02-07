@@ -1,8 +1,7 @@
-﻿namespace Application.Commands.Medico
+﻿namespace WebApi.Medico.Models.Requests
 {
-    public class RecusarConsultaCommand
+    public class RecusarConsultaRequest
     {
-        public string Crm { get; set; }
         public int ConsultaMedicaId { get; set; }
         public bool DisponibilizarAgenda { get; set; }
     }

@@ -5,6 +5,7 @@ using Core.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using WebApi.Medico.Models.Requests;
 
 namespace WebApi.Medico.Controllers
 {
@@ -18,16 +19,22 @@ namespace WebApi.Medico.Controllers
         ICommandHandler<RecusarConsultaCommand> recusarConsultaCommandHandler,
         IPesquisarConsultaMedicaQueryHandler pesquisarConsultaMedicaQueryHandler) : ControllerBase
     {
-        protected string? UserId => User.Claims
+        protected string IdentificacaoUsuarioLogin => User.Claims
             .Where(c => c.Type == ClaimTypes.NameIdentifier)
             .Select(c => c.Value)
-            .FirstOrDefault();
+            .First();
 
 
         [HttpPost("agenda/cadastar")]
-        public IActionResult CadastrarAgenda([FromBody] CadastrarAgendaCommand command)
+        public IActionResult CadastrarAgenda([FromBody] CadastrarAgendaRequest request)
         {
-            if (command.Crm != UserId) return Unauthorized("[ERRO] CRM informado é diferente do CRM do usuário logado.");
+            var command = new CadastrarAgendaCommand
+            {
+                Crm = IdentificacaoUsuarioLogin,
+                DataHora = request.DataHora,
+                Valor = request.Valor,
+                Disponivel = request.Disponivel
+            };
 
             var result = cadastrarAgendaCommandHandler.Handle(command);
 
@@ -37,19 +44,27 @@ namespace WebApi.Medico.Controllers
         }
 
         [HttpGet("consulta-medica/pesquisar")]
-        public IActionResult PesquisarConsultaMedica([FromQuery] PesquisarConsultaMedicaQuery command)
+        public IActionResult PesquisarConsultaMedica([FromQuery] PesquisarConsultaMedicaRequest request)
         {
-            if (command.Crm != UserId) return Unauthorized("[ERRO] CRM informado é diferente do CRM do usuário logado.");
+            var query = new PesquisarConsultaMedicaQuery
+            {
+                Crm = IdentificacaoUsuarioLogin,
+                Situacao = request.Situacao
+            };
 
-            var result = pesquisarConsultaMedicaQueryHandler.GetByCrmAndSituacaoConsultaMedica(command).Result;
+            var result = pesquisarConsultaMedicaQueryHandler.GetByCrmAndSituacaoConsultaMedica(query).Result;
 
             return Ok(result);
         }
 
         [HttpPost("consulta-medica/aceitar")]
-        public IActionResult AceitarConsulta([FromBody] AceitarConsultaCommand command)
+        public IActionResult AceitarConsulta([FromBody] AceitarConsultaRequest request)
         {
-            if (command.Crm != UserId) return Unauthorized("[ERRO] CRM informado é diferente do CRM do usuário logado.");
+            var command = new AceitarConsultaCommand
+            {
+                Crm = IdentificacaoUsuarioLogin,
+                ConsultaMedicaId = request.ConsultaMedicaId
+            };
 
             var result = aceitarConsultaCommandHandler.Handle(command);
 
@@ -59,9 +74,14 @@ namespace WebApi.Medico.Controllers
         }
 
         [HttpPost("consulta-medica/recusar")]
-        public IActionResult RecusarConsulta([FromBody] RecusarConsultaCommand command)
+        public IActionResult RecusarConsulta([FromBody] RecusarConsultaRequest request)
         {
-            if (command.Crm != UserId) return Unauthorized("[ERRO] CRM informado é diferente do CRM do usuário logado.");
+            var command = new RecusarConsultaCommand
+            {
+                Crm = IdentificacaoUsuarioLogin,
+                ConsultaMedicaId = request.ConsultaMedicaId,
+                DisponibilizarAgenda = request.DisponibilizarAgenda
+            };
 
             var result = recusarConsultaCommandHandler.Handle(command);
 

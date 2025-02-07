@@ -55,6 +55,7 @@ namespace Infra.Data.Repositories
                 .ToListAsync();
         }
 
-        private static BuscarMedicoDto BuscarMedicoDtoNovo(Medico medico) => new BuscarMedicoDto(medico.Nome, medico.Email, medico.Crm, medico.Especialidade.Descricao);
+        private static BuscarMedicoDto BuscarMedicoDtoNovo(Medico medico) => 
+            new BuscarMedicoDto( medico.Crm,medico.Nome, medico.Email, medico.Especialidade.Codigo, medico.Especialidade.Descricao);
     }
 }

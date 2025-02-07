@@ -2,16 +2,16 @@
 {
     public class PesquisarConsultaMedicaDto
     {
-        public int ConsultaId { get; set; }
+        public int ConsultaMedicaId { get; set; }
         public string NomePaciente { get; set; }
         public string EmailPaciente { get; set; }
         public DateTime DataHora { get; set; }
         public decimal Valor { get; set; }
         public string DescricaoSituacao { get; set; }
 
-        public PesquisarConsultaMedicaDto(int consultaId, string nomePaciente, string emailPaciente, DateTime dataHora, decimal valor, string descricaoSituacao)
+        public PesquisarConsultaMedicaDto(int consultaMedicaId, string nomePaciente, string emailPaciente, DateTime dataHora, decimal valor, string descricaoSituacao)
         {
-            ConsultaId = consultaId;
+            ConsultaMedicaId = consultaMedicaId;
             NomePaciente = nomePaciente;
             EmailPaciente = emailPaciente;
             DataHora = dataHora;

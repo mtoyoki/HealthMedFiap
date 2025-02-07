@@ -13,13 +13,13 @@ namespace Application.Commands.Medico.Handlers
             {
                 return CommandResultFactory.CreateErrorResult(new List<string>() { "[ERRO] Não foi possível encontrar médico." });
             }
-            
+
             // Validação para garantir que somente a data e hora foram preenchidas
             if (command.DataHora.Minute != 0 || command.DataHora.Second != 0 || command.DataHora.Millisecond != 0)
             {
-                return CommandResultFactory.CreateErrorResult(new List<string>() { "[ERRO] No campo dataHora somente as partes referente a data e hora devem ser preenchidas." });
+                return CommandResultFactory.CreateErrorResult(new List<string>() { "[ERRO] No campo dataHora, deixar zerado a parte dos minutos, segundos e milisegundos." });
             }
-            
+
             var agenda = agendaRepository.GetByCrmAndDataHora(command.Crm, command.DataHora).Result;
             if (agenda != null)
             {

@@ -6,6 +6,7 @@ using Core.Commands;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Paciente.Models.Requests;
 
 namespace WebApi.Paciente.Controllers
 {
@@ -19,10 +20,10 @@ namespace WebApi.Paciente.Controllers
         IBuscarMedicoQueryHandler buscarMedicoQueryHandler,
         IPesquisarAgendaQueryHandler pesquisarAgendaQueryHandler) : ControllerBase
     {
-        protected string? UserId => User.Claims
+        protected string? IdentificacaoUsuarioLogin => User.Claims
             .Where(c => c.Type == ClaimTypes.NameIdentifier)
             .Select(c => c.Value)
-            .FirstOrDefault();
+            .First();
 
         [HttpGet("medicos/buscar")]
         public IActionResult BuscarMedicos([FromQuery] BuscarMedicoQuery query)
@@ -41,7 +42,7 @@ namespace WebApi.Paciente.Controllers
             return Ok(result);
         }
 
-        [HttpGet("agenda/pesquisar")]
+        [HttpGet("medicos/agenda/pesquisar")]
         public IActionResult PesquisarAgenda([FromQuery] PesquisarAgendaQuery query)
         {
             var result = pesquisarAgendaQueryHandler.GetByCrm(query.Crm).Result;
@@ -49,9 +50,13 @@ namespace WebApi.Paciente.Controllers
         }
 
         [HttpPost("consulta-medica/agendar")]
-        public IActionResult AgendarConsultaMedica([FromBody] AgendarConsultaCommand command)
+        public IActionResult AgendarConsultaMedica([FromBody] AgendarConsultaRequest request)
         {
-            if (command.Cpf != UserId) return Unauthorized("[ERRO] CPF informado é diferente do CPF do usuário logado.");
+            var command = new AgendarConsultaCommand()
+            {
+                EmailOrCpf = IdentificacaoUsuarioLogin,
+                AgendaId = request.AgendaId,
+            };
 
             var result = agendarConsultaCommandHandler.Handle(command);
 
@@ -61,9 +66,14 @@ namespace WebApi.Paciente.Controllers
         }
 
         [HttpPost("consulta-medica/cancelar")]
-        public IActionResult CancelarConsultaMedica([FromBody] CancelarConsultaCommand command)
+        public IActionResult CancelarConsultaMedica([FromBody] CancelarConsultaRequest request)
         {
-            if (command.Cpf != UserId) return Unauthorized("[ERRO] CPF informado é diferente do CPF do usuário logado.");
+            var command= new CancelarConsultaCommand()
+            {
+                EmailOrCpf = IdentificacaoUsuarioLogin,
+                ConsultaMedicaId = request.ConsultaId,
+                Justificativa = request.Justificativa
+            };
 
             var result = cancelarConsultaCommandHandler.Handle(command);
 

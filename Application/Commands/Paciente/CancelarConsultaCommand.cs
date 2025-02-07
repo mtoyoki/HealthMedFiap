@@ -2,7 +2,7 @@
 {
     public class CancelarConsultaCommand
     {
-        public string Cpf { get; set; }
+        public string EmailOrCpf { get; set; }
 
         public int ConsultaMedicaId { get; set; }
 
