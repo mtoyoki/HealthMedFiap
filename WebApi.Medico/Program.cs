@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.Http,
         Scheme = "basic",
         In = ParameterLocation.Header,
-        Description = "Username do médico é o número de <b>CRM</b>"
+        Description = "Username: Numero do CRM"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement

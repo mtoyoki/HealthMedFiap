@@ -1,0 +1,43 @@
+# webapi-medico-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi-medico
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapi-medico
+  template:
+    metadata:
+      labels:
+        app: webapi-medico
+    spec:
+      containers:
+      - name: webapi-medico
+        image: mtoyoki/webapi.medico:latest
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /swagger/index.html
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi-medico
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30002  # Escolha uma porta entre 30000-32767
+  selector:
+    app: webapi-medico

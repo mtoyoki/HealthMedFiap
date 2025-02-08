@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  webapi.medico:
+    image: ${DOCKER_REGISTRY-}webapimedico
+    build:
+      context: .
+      dockerfile: WebApi.Medico/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver:
+        condition: service_started
+    networks:
+      - docker-network
+
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      SA_PASSWORD: "Password#2024"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - C:\Dados\volumes\mssql:/var/opt/mssql/data
+    ports:
+      - "1433:1433"
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    driver: bridge
