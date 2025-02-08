@@ -47,8 +47,8 @@ builder.Services.AddDbContext(builder.Configuration); //builder.Services.AddDbCo
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -57,12 +57,12 @@ if (app.Environment.IsDevelopment())
     });
 
     app.UseDeveloperExceptionPage();
-}
+//}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 app.MapControllers();
 

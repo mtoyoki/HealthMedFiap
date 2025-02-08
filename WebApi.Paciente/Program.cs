@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.Http,
         Scheme = "basic",
         In = ParameterLocation.Header,
-        Description = "Username do paciente é o <b>CPF</b> ou <b>e-mail</b>."
+        Description = "Username: <b>CPF</b> ou <b>e-mail</b>."
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -35,21 +35,21 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 
+//Configura injeção de dependência para os Repositories, CommandHandlers, QueryHandlers
+builder.Services.ConfigureDependencyInjection();																					   
 
 // Adiciona o serviço de autenticação básica
 builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, PacienteAuthenticationHandler>("BasicAuthentication", null);
 
 builder.Services.AddControllers();
 
-//Configura injeção de dependência para os Repositories, CommandHandlers, QueryHandlers
-builder.Services.ConfigureDependencyInjection();
 
 builder.Services.AddDbContext(builder.Configuration); //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -58,12 +58,12 @@ if (app.Environment.IsDevelopment())
     });
 
     app.UseDeveloperExceptionPage();
-}
+//}
 
-app.UseHttpsRedirection();
+////app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+////app.UseAuthentication();
+////app.UseAuthorization();
 
 app.MapControllers();
 
