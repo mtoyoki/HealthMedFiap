@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApi.Medico.Models.Requests;
 
-
 namespace WebApi.Medico.Controllers
 {
 
