@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0' # Use a versão do .NET Core que você está usando
+
+    - name: Restore dependencies
+      run: dotnet restore ./HealthMedFiap.sln
+
+    - name: Build
+      run: dotnet build ./HealthMedFiap.sln --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test ./HealthMedFiap.sln --no-restore --verbosity normal
+
+    - name: Publish
+      run: dotnet publish ./WebApi.Medico/WebApi.Medico.csproj --configuration Release --no-restore --output ./publish
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: published-app
+        path: ./publish
