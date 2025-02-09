@@ -17,9 +17,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0.x' # Use a versão do .NET Core que você está usando
+        dotnet-version: '8.0' # Use a versão do .NET Core que você está usando
 
     - name: Restore dependencies
       run: dotnet restore
